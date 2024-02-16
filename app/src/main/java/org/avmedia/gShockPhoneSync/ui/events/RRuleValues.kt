@@ -6,10 +6,10 @@
 
 package org.avmedia.gShockPhoneSync.ui.events
 
-import com.philjay.Frequency
-import com.philjay.RRule
-import com.philjay.Weekday
-import com.philjay.WeekdayNum
+import com.imBenjamin741.Frequency
+import com.imBenjamin741.RRule
+import com.imBenjamin741.Weekday
+import com.imBenjamin741.WeekdayNum
 import org.avmedia.gshockapi.EventDate
 import org.avmedia.gshockapi.RepeatPeriod
 import timber.log.Timber
@@ -178,7 +178,7 @@ object RRuleValues {
 
     private fun validateRule(rule: String): Boolean {
         val dateFormatter =
-            DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss'Z'").withZone(ZoneOffset.UTC)
+            DateTimeFormatter.ofPattern("yyyyMMdd['T'HHmmss'Z']").withZone(ZoneOffset.UTC)
 
         var i = 0
         val name = "RRULE"
@@ -188,9 +188,9 @@ object RRuleValues {
             if (component == "UNTIL") {
                 val untilValue = components[i + 1]
                 try {
-                    LocalDateTime.parse(untilValue, dateFormatter).toInstant(ZoneOffset.UTC)
+                    dateFormatter.parseBest(untilValue, LocalDateTime::from, LocalDate::from)
                 } catch (e: DateTimeParseException) {
-                    Timber.e("Invalid Calendar Date: $component}: $untilValue")
+                    Timber.e("Invalid Calendar Date: $component: $untilValue")
                     return false
                 }
             }
